@@ -89,6 +89,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            cursor: pointer;
         }
 
         .brand-logo {
@@ -293,13 +294,13 @@
 </head>
 <body>
 
-    <nav id="sidebar">
-        <div class="brand">
-            <img src="https://raw.githubusercontent.com/roigoatzzz/FMHY-Grading/main/fmhy.png" alt="FMHY" class="brand-logo">
-            FMHY Grading
-        </div>
-        <div id="nav-container"></div>
-    </nav>
+   <nav id="sidebar">
+    <div class="brand" onclick="document.getElementById('content-scroll').scrollTo({top:0, behavior:'smooth'})" title="Scroll to Top">
+        <img src="https://raw.githubusercontent.com/roigoatzzz/FMHY-Grading/main/fmhy.png" alt="FMHY" class="brand-logo">
+        FMHY Grading
+    </div>
+    <div id="nav-container"></div>
+</nav>
 
     <div id="main-wrapper">
         <header>
