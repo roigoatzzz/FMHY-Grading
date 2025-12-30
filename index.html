@@ -1,131 +1,140 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FMHY Stream Grading</title>
+    <title>FMHY Grading</title>
     
+    <!-- FAVICON (Your Custom Icon) -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/roigoatzzz/FMHY-Grading/main/fmhy.png">
+
+    <!-- FONTS & PARSER -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
+        /* --- PROFESSIONAL THEME ENGINE --- */
         :root {
-            --glass-bg: rgba(13, 17, 23, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-highlight: rgba(255, 255, 255, 0.03);
-            --accent-color: #38bdf8;
-            --text-main: #edf2f7;
-            --text-muted: #94a3b8;
-            --danger: #f87171;
-            --success: #34d399;
+            /* LIGHT MODE (Default) */
+            --bg-body: #ffffff;
+            --bg-sidebar: #f4f4f5;      /* Zinc 100 */
+            --bg-header: rgba(255, 255, 255, 0.95);
+            --bg-card: #ffffff;
+            --bg-hover: #e4e4e7;
+            
+            --border: #e4e4e7;
+            --border-strong: #d4d4d8;
+            
+            --text-main: #18181b;       /* Zinc 900 */
+            --text-muted: #71717a;      /* Zinc 500 */
+            --text-accent: #2563eb;     /* Professional Blue */
+            
+            --scrollbar-thumb: #d4d4d8;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.06);
         }
 
-        * {
-            box-sizing: border-box;
+        /* DARK MODE */
+        [data-theme="dark"] {
+            --bg-body: #09090b;         /* Zinc 950 */
+            --bg-sidebar: #000000;
+            --bg-header: rgba(9, 9, 11, 0.9);
+            --bg-card: #18181b;         /* Zinc 900 */
+            --bg-hover: #27272a;
+            
+            --border: #27272a;
+            --border-strong: #3f3f46;
+            
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --text-accent: #38bdf8;     /* Sky Blue */
+            
+            --scrollbar-thumb: #3f3f46;
+            --shadow: none;
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
-            font-family: 'Outfit', sans-serif;
-            background-color: #02040a;
-            /* subtle gradient mesh background */
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
-            background-attachment: fixed;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-body);
             color: var(--text-main);
             height: 100vh;
             overflow: hidden;
             display: flex;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* --- SIDEBAR --- */
+        /* --- SIDEBAR NAVIGATION --- */
         #sidebar {
             width: 280px;
             height: 100%;
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-right: 1px solid var(--glass-border);
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
             z-index: 50;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s ease;
         }
 
         .brand {
-            padding: 25px 20px;
-            font-size: 1.4rem;
+            padding: 20px 24px;
+            font-size: 0.95rem;
             font-weight: 700;
-            letter-spacing: -0.02em;
-            color: #fff;
-            border-bottom: 1px solid var(--glass-border);
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
-        /* Logo icon simulation */
-        .brand::before {
-            content: '';
-            display: block;
-            width: 12px;
-            height: 12px;
-            background: var(--accent-color);
-            border-radius: 50%;
-            box-shadow: 0 0 15px var(--accent-color);
+        .brand-logo {
+            width: 28px; height: 28px;
+            object-fit: contain;
         }
 
         #nav-container {
             flex: 1;
             overflow-y: auto;
-            padding: 15px 10px;
+            padding: 16px 12px;
         }
 
+        /* Nav Links */
         .nav-item {
             display: block;
-            padding: 10px 14px;
-            margin-bottom: 4px;
+            padding: 8px 12px;
+            margin-bottom: 2px;
             color: var(--text-muted);
             text-decoration: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
             transition: all 0.2s;
             border: 1px solid transparent;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .nav-item:hover {
-            background: var(--glass-highlight);
-            color: #fff;
-            border-color: var(--glass-border);
-            transform: translateX(4px);
+            background: var(--bg-hover);
+            color: var(--text-main);
         }
 
         .nav-item.active {
-            background: rgba(56, 189, 248, 0.1);
-            color: var(--accent-color);
-            border-color: rgba(56, 189, 248, 0.2);
+            background: var(--bg-hover);
+            color: var(--text-accent);
+            font-weight: 600;
+            border-color: var(--border);
         }
 
         .nav-item.sub-item {
-            padding-left: 24px;
-            font-size: 0.85rem;
-            border-left: 2px solid rgba(255,255,255,0.05);
-            border-radius: 0 8px 8px 0;
+            padding-left: 28px;
+            margin-left: 10px;
+            border-left: 1px solid var(--border);
+            border-radius: 0 6px 6px 0;
         }
 
-        /* --- MAIN CONTENT --- */
+        /* --- MAIN CONTENT AREA --- */
         #main-wrapper {
             flex: 1;
             display: flex;
@@ -135,51 +144,46 @@
         }
 
         header {
-            padding: 15px 30px;
-            background: rgba(2, 4, 10, 0.6);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--glass-border);
+            height: 60px;
+            padding: 0 32px;
+            background: var(--bg-header);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
             z-index: 40;
         }
 
-        .header-left { display: flex; align-items: center; gap: 15px; }
+        .header-controls { display: flex; align-items: center; gap: 10px; }
 
-        .status-pill {
-            font-size: 0.75rem;
-            padding: 4px 10px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.05);
-            color: var(--text-muted);
-            border: 1px solid var(--glass-border);
-        }
-
-        #refreshBtn {
-            background: var(--accent-color);
-            color: #000;
-            border: none;
-            padding: 8px 16px;
+        /* Buttons */
+        .btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 6px 12px;
             border-radius: 6px;
-            font-weight: 600;
             cursor: pointer;
+            font-family: inherit;
             font-size: 0.85rem;
+            font-weight: 500;
+            display: flex; align-items: center; gap: 8px;
             transition: all 0.2s;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+        }
+        .btn:hover { background: var(--bg-hover); border-color: var(--border-strong); }
+        .btn:disabled { opacity: 0.5; cursor: wait; }
+
+        .status-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-right: 12px;
+            font-family: monospace;
         }
 
-        #refreshBtn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
-        }
-        
-        #refreshBtn:disabled {
-            opacity: 0.6;
-            cursor: wait;
-            transform: none;
-        }
-
+        /* --- MARKDOWN CONTENT --- */
         #content-scroll {
             flex: 1;
             overflow-y: auto;
@@ -188,103 +192,127 @@
         }
 
         .markdown-body {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 0 auto;
-            line-height: 1.7;
+            line-height: 1.65;
+            color: var(--text-main);
         }
 
-        /* Markdown Elements */
-        .markdown-body h1, .markdown-body h2, .markdown-body h3 {
-            color: #fff;
-            margin-top: 2em;
-            scroll-margin-top: 100px; /* fix scroll position */
+        /* Typography */
+        .markdown-body h1 {
+            font-size: 2rem;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            margin-top: 0;
+            color: var(--text-main);
         }
-
-        .markdown-body h1 { 
-            font-size: 2.5rem; 
-            border-bottom: 1px solid var(--glass-border); 
-            padding-bottom: 15px;
-            background: linear-gradient(to right, #fff, #94a3b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        
+        .markdown-body h2 { 
+            margin-top: 2.5em; 
+            font-size: 1.5rem; 
+            letter-spacing: -0.01em; 
+            color: var(--text-main);
         }
-
-        .markdown-body h1 img {
-            max-width: 100%;
-            border-radius: 12px;
-            margin-bottom: 20px;
+        
+        .markdown-body h3 { 
+            margin-top: 2em; 
+            font-size: 1.15rem; 
+            font-weight: 600;
+            color: var(--text-main);
         }
-
-        .markdown-body a { color: var(--accent-color); text-decoration: none; }
+        
+        .markdown-body a { color: var(--text-accent); text-decoration: none; font-weight: 500; }
         .markdown-body a:hover { text-decoration: underline; }
+        .markdown-body img { max-width: 100%; border-radius: 8px; height: auto; display: block; margin: 20px 0; }
 
         /* Tables */
         .markdown-body table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
-            margin: 25px 0;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
+            margin: 24px 0;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
             overflow: hidden;
-            font-size: 0.95rem;
+            background: var(--bg-card);
+            box-shadow: var(--shadow);
         }
 
         .markdown-body th {
-            background: rgba(255,255,255,0.05);
+            background: var(--bg-hover);
             text-align: left;
-            padding: 16px;
+            padding: 12px 16px;
             font-weight: 600;
-            color: var(--accent-color);
-            border-bottom: 1px solid var(--glass-border);
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border);
+            font-size: 0.8rem;
+            text-transform: uppercase;
         }
 
         .markdown-body td {
-            padding: 16px;
-            border-bottom: 1px solid var(--glass-border);
-            color: #cbd5e1;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-muted);
+            vertical-align: top;
         }
 
         .markdown-body tr:last-child td { border-bottom: none; }
-        .markdown-body tr:hover td { background: rgba(255,255,255,0.03); }
+        .markdown-body tr:hover td { background-color: var(--bg-hover); color: var(--text-main); }
 
-        /* Mobile Menu */
-        #menu-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+
+        /* Mobile Responsive */
+        #menu-toggle { display: none; background: none; border: none; color: var(--text-main); font-size: 1.4rem; cursor: pointer; }
 
         @media (max-width: 900px) {
             #sidebar {
-                position: fixed;
-                left: 0; top: 0;
+                position: fixed; left: 0; top: 0;
                 transform: translateX(-100%);
-                width: 85%;
-                box-shadow: 50px 0 100px rgba(0,0,0,0.5);
+                width: 80%;
+                box-shadow: 20px 0 50px rgba(0,0,0,0.3);
             }
             #sidebar.open { transform: translateX(0); }
             #content-scroll { padding: 20px; }
             #menu-toggle { display: block; }
             .markdown-body table { display: block; overflow-x: auto; white-space: nowrap; }
+            header { padding: 0 16px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar -->
+    <!-- SIDEBAR -->
     <nav id="sidebar">
-        <div class="brand">FMHY Grading</div>
-        <div id="nav-container">
-            <div style="padding:20px; text-align:center; color:var(--text-muted)">Loading...</div>
+        <div class="brand">
+            <!-- Updated Logo URL -->
+            <img src="https://raw.githubusercontent.com/roigoatzzz/FMHY-Grading/main/fmhy.png" alt="FMHY" class="brand-logo">
+            FMHY Grading
         </div>
+        <div id="nav-container"></div>
     </nav>
 
-    <!-- Main Content -->
+    <!-- MAIN WRAPPER -->
     <div id="main-wrapper">
         <header>
-            <div class="header-left">
+            <div style="display:flex; align-items:center; gap:16px;">
                 <button id="menu-toggle" onclick="toggleSidebar()">☰</button>
-                <div class="status-pill" id="status">Initializing...</div>
+                <div id="status" class="status-text">Connecting...</div>
             </div>
-            <button id="refreshBtn" onclick="fetchData()">Refresh Data</button>
+            
+            <div class="header-controls">
+                <!-- Theme Button -->
+                <button class="btn" id="themeBtn" onclick="toggleTheme()" title="Switch Theme">
+                    <span id="themeIcon">☀</span>
+                </button>
+                <!-- Refresh Button -->
+                <button class="btn" id="refreshBtn" onclick="fetchData()">
+                    Refresh
+                </button>
+            </div>
         </header>
 
         <div id="content-scroll">
@@ -293,121 +321,185 @@
     </div>
 
     <script>
+        // --- ELEMENTS ---
         const contentDiv = document.getElementById('content');
         const navContainer = document.getElementById('nav-container');
-        const statusPill = document.getElementById('status');
+        const statusDiv = document.getElementById('status');
         const refreshBtn = document.getElementById('refreshBtn');
         const sidebar = document.getElementById('sidebar');
+        const themeIcon = document.getElementById('themeIcon');
+        const contentScroll = document.getElementById('content-scroll');
 
+        // --- URLS ---
         const RAW_URL = 'https://raw.githubusercontent.com/wiki/fmhy/FMHY/Stream-Site-Grading.md';
+        
+        // Triple-Redundancy: Try Direct -> Proxy A -> Proxy B
+        const PROXY_A = 'https://api.allorigins.win/raw?url=';
+        const PROXY_B = 'https://corsproxy.io/?';
 
+        // Auto-update: 1 Hour (ms)
+        const UPDATE_INTERVAL = 3600000; 
+
+        // --- 1. THEME LOGIC ---
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme === 'light' || (!savedTheme && !systemDark)) {
+                applyTheme('light');
+            } else {
+                applyTheme('dark');
+            }
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            themeIcon.textContent = theme === 'dark' ? '☀' : '☾';
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+        }
+
+        // --- 2. ROBUST FETCHING LOGIC ---
         async function fetchData() {
             refreshBtn.disabled = true;
-            statusPill.textContent = "Fetching latest data...";
-            statusPill.style.color = "#fbbf24"; // yellow
+            refreshBtn.textContent = "Loading...";
             contentDiv.style.opacity = '0.5';
 
             try {
-                // 1. Fetch
-                const response = await fetch(`${RAW_URL}?t=${Date.now()}`);
-                if (!response.ok) throw new Error("GitHub fetch failed");
-                const text = await response.text();
+                let response;
+                const timestamp = Date.now();
+                
+                // ATTEMPT 1: Direct GitHub (Best Speed)
+                try {
+                    console.log("Attempt 1: Direct Fetch");
+                    response = await fetch(`${RAW_URL}?t=${timestamp}`);
+                    if (!response.ok) throw new Error("Direct fetch failed");
+                } catch (e) {
+                    // ATTEMPT 2: AllOrigins Proxy
+                    try {
+                        console.warn("Attempt 2: Proxy A");
+                        response = await fetch(`${PROXY_A}${encodeURIComponent(RAW_URL)}&t=${timestamp}`);
+                        if (!response.ok) throw new Error("Proxy A failed");
+                    } catch (e2) {
+                        // ATTEMPT 3: CORSProxy.io
+                        console.warn("Attempt 3: Proxy B");
+                        response = await fetch(`${PROXY_B}${encodeURIComponent(RAW_URL)}?t=${timestamp}`);
+                    }
+                }
 
-                // 2. Render
+                if (!response || !response.ok) throw new Error("All connection attempts failed");
+                
+                const text = await response.text();
+                
+                // Render Markdown
                 contentDiv.innerHTML = marked.parse(text);
 
-                // 3. Process
-                cleanUpTableOfContents(); // Remove redundant links
-                generateSidebar();        // Build the menu
-                fixLinks();               // Fix external redirects
+                // Run Post-Processors
+                cleanUpTableOfContents(); 
+                generateSidebar();       
+                fixLinks();
+                initScrollSpy();
 
-                // 4. Update Status
                 const now = new Date();
-                statusPill.textContent = `Updated: ${now.toLocaleTimeString()}`;
-                statusPill.style.color = "#34d399"; // green
+                statusDiv.textContent = `Updated: ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+                statusDiv.style.color = "var(--text-muted)";
 
             } catch (err) {
                 console.error(err);
-                contentDiv.innerHTML = `<div style="text-align:center; padding:50px; color:var(--danger)">
-                    <h2>Error Loading Content</h2>
-                    <p>${err.message}</p>
+                statusDiv.textContent = "Error";
+                statusDiv.style.color = "#ef4444";
+                contentDiv.innerHTML = `<div style="padding:40px; border:1px solid var(--border); border-radius:8px;">
+                    <h3 style="margin-top:0">Unable to load content</h3>
+                    <p>We could not connect to GitHub. This might be a network firewall or adblocker issue.</p>
+                    <button class="btn" onclick="fetchData()">Try Again</button>
                 </div>`;
-                statusPill.textContent = "Error";
-                statusPill.style.color = "#f87171";
             } finally {
                 refreshBtn.disabled = false;
+                refreshBtn.textContent = "Refresh";
                 contentDiv.style.opacity = '1';
             }
         }
 
-        // --- 1. SIDEBAR GENERATOR (Fixed Empty #1 Issue) ---
+        // --- 3. SIDEBAR & NAVIGATION ---
         function generateSidebar() {
             navContainer.innerHTML = '';
             const headers = contentDiv.querySelectorAll('h1, h2, h3');
             
             headers.forEach((header, index) => {
-                // Generate a safe ID for the section
                 const sectionId = `section-${index}`;
                 header.id = sectionId;
 
-                // GET TITLE TEXT
                 let title = header.textContent.trim();
-                
-                // FIX: If title is empty (common with Logo Images in H1), find a fallback
+                // Handle Logo-only headers
                 if (!title) {
                     const img = header.querySelector('img');
-                    if (img && img.alt) title = img.alt; // Use Image Alt text
-                    else if (header.tagName === 'H1') title = "Introduction"; // Fallback for top header
-                    else title = `Section ${index + 1}`; // Last resort
+                    if (img && img.alt) title = img.alt; 
+                    else if (header.tagName === 'H1') title = "Overview"; 
+                    else title = `Section ${index + 1}`;
                 }
 
-                // Create Link
                 const link = document.createElement('a');
                 link.textContent = title;
                 link.href = `#${sectionId}`;
                 link.className = 'nav-item';
+                link.dataset.target = sectionId;
+                
                 if (header.tagName === 'H3') link.classList.add('sub-item');
 
                 link.onclick = (e) => {
                     e.preventDefault();
-                    // Smooth Scroll
                     document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
-                    // Close sidebar on mobile
                     if (window.innerWidth <= 900) toggleSidebar();
-                    // Set active state
-                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                    link.classList.add('active');
                 };
 
                 navContainer.appendChild(link);
             });
         }
 
-        // --- 2. LINK FIXER ---
+        // --- 4. SCROLL SPY ---
+        function initScrollSpy() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        document.querySelectorAll('.nav-item').forEach(link => link.classList.remove('active'));
+                        const activeLink = document.querySelector(`.nav-item[data-target="${entry.target.id}"]`);
+                        if (activeLink) {
+                            activeLink.classList.add('active');
+                            // Gently keep sidebar in view
+                            activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    }
+                });
+            }, { 
+                root: contentScroll,
+                rootMargin: '-10% 0px -80% 0px', // Active zone near top
+                threshold: 0
+            });
+
+            contentDiv.querySelectorAll('h1, h2, h3').forEach(h => observer.observe(h));
+        }
+
+        // --- 5. CLEANUP UTILS ---
         function fixLinks() {
             contentDiv.querySelectorAll('a').forEach(link => {
                 const href = link.getAttribute('href');
                 if (!href) return;
 
-                // Fix GitHub Wiki Anchor Redirects
                 if (href.includes('github.com') && href.includes('#')) {
                     const anchorPart = href.split('#')[1];
                     link.removeAttribute('target');
                     link.href = '#'; 
-                    link.onclick = (e) => {
-                        e.preventDefault();
-                        // Try to find the header text roughly matching the anchor
-                        findSectionByText(anchorPart);
-                    };
-                } 
-                // Force external links to new tab
-                else if (href.startsWith('http')) {
+                    link.onclick = (e) => { e.preventDefault(); findSectionByText(anchorPart); };
+                } else if (href.startsWith('http')) {
                     link.target = "_blank";
                 }
             });
         }
 
-        // Fuzzy search to find where to scroll for broken GitHub anchors
         function findSectionByText(text) {
             const cleanText = text.toLowerCase().replace(/-/g, ' ');
             const headers = Array.from(contentDiv.querySelectorAll('h1, h2, h3'));
@@ -415,34 +507,34 @@
             if (target) target.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // --- 3. CLEAN UP TOC ---
         function cleanUpTableOfContents() {
-            // Logic: Find the "Table of Contents" Header and hide it + the list immediately following it
-            const headers = contentDiv.querySelectorAll('h1, h2, h3, h4, strong'); // 'strong' sometimes used as header
-            
+            // Remove the duplicate list at the top of the file
+            const headers = contentDiv.querySelectorAll('h1, h2, h3, h4, strong'); 
             headers.forEach(h => {
                 if (h.textContent.toLowerCase().includes('table of contents')) {
-                    h.style.display = 'none'; // Hide the header
-                    
-                    // Find the next UL (list) and hide it
+                    h.style.display = 'none'; 
                     let nextElem = h.nextElementSibling;
                     while(nextElem) {
-                        if (nextElem.tagName === 'UL') {
-                            nextElem.style.display = 'none';
-                            break;
-                        }
+                        if (nextElem.tagName === 'UL') { nextElem.style.display = 'none'; break; }
                         nextElem = nextElem.nextElementSibling;
                     }
                 }
             });
         }
 
-        function toggleSidebar() {
-            sidebar.classList.toggle('open');
-        }
+        function toggleSidebar() { sidebar.classList.toggle('open'); }
 
-        // Init
-        window.onload = fetchData;
+        // --- INITIALIZATION ---
+        window.onload = () => {
+            initTheme();
+            fetchData();
+            
+            // Auto Update (1 Hour)
+            setInterval(() => {
+                console.log("Auto-refreshing...");
+                fetchData();
+            }, UPDATE_INTERVAL); 
+        };
     </script>
 </body>
 </html>
