@@ -221,7 +221,7 @@
         }
 
         /* Base Typography */
-        .markdown-body h1, .markdown-body h2, .markdown-body h3 { scroll-margin-top: 80px; }
+        .markdown-body h1, .markdown-body h2, .markdown-body h3 { }
         
         .markdown-body h1 {
             font-size: 2.2rem;
@@ -435,7 +435,7 @@
         }
 
         // SIDEBAR & CONTENT COLORING
-        function generateSidebar() {
+       function generateSidebar() {
             navContainer.innerHTML = '';
             const headers = contentDiv.querySelectorAll('h1, h2, h3');
             
@@ -457,7 +457,7 @@
                 link.dataset.target = sectionId;
                 link.className = 'nav-item'; 
 
-                // LOGIC: Apply classes to Link AND Content Header
+                // --- CLASSIFICATION LOGIC ---
                 if (title.includes("Streaming Sites")) {
                     link.classList.add('major-header', 'type-streaming');
                     header.classList.add('header-streaming'); 
@@ -481,16 +481,32 @@
                     link.classList.add('service-item');
                 }
 
+                // --- NEW CLICK HANDLER (THE FIX) ---
                 link.onclick = (e) => {
                     e.preventDefault();
-                    document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+                    
+                    const container = document.getElementById('content-scroll');
+                    const element = document.getElementById(sectionId);
+                    
+                    // OFFSET SETTING: Change '80' to adjust the gap at the top
+                    const headerOffset = 80; 
+                    
+                    // Math to calculate exact position relative to the scroll container
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const containerPosition = container.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition - containerPosition + container.scrollTop - headerOffset;
+
+                    container.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                    });
+
                     if (window.innerWidth <= 900) toggleSidebar();
                 };
 
                 navContainer.appendChild(link);
             });
         }
-
         // SCROLL SPY
         function initScrollSpy() {
             const observer = new IntersectionObserver((entries) => {
