@@ -15,42 +15,54 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
-        /* --- PROFESSIONAL THEME ENGINE --- */
+        /* --- THEME ENGINE --- */
         :root {
-            /* LIGHT MODE */
+            /* --- LIGHT MODE --- */
             --bg-body: #ffffff;
-            --bg-sidebar: #f4f4f5;
+            --bg-sidebar: #f8f9fa;
             --bg-header: rgba(255, 255, 255, 0.95);
             --bg-card: #ffffff;
-            --bg-hover: #e4e4e7;
+            --bg-hover: #e9ecef;
             
-            --border: #e4e4e7;
-            --border-strong: #d4d4d8;
+            --border: #dee2e6;
+            --border-strong: #ced4da;
             
-            --text-main: #18181b;
-            --text-muted: #71717a;
-            --text-accent: #2563eb;
-            
-            --scrollbar-thumb: #d4d4d8;
-            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+            --text-main: #212529;
+            --text-muted: #6c757d;
+            --text-accent: #0d6efd; 
+
+            /* Category Colors (Light) */
+            --c-streaming: #c82424; /* Blue */
+            --c-single:    #198754; /* Green */
+            --c-agg:       #6610f2; /* Purple */
+            --c-embed:     #fd7e14; /* Orange */
+
+            --scrollbar-thumb: #ced4da;
+            --shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        /* DARK MODE */
         [data-theme="dark"] {
-            --bg-body: #09090b;
-            --bg-sidebar: #000000;
-            --bg-header: rgba(9, 9, 11, 0.9);
-            --bg-card: #18181b;
-            --bg-hover: #27272a;
+            /* --- DARK MODE (Deep & Subtle Gradient) --- */
+            --bg-body: #050505; /* Deep Black/Gray base */
+            --bg-sidebar: #000000; /* Pure Black Sidebar */
+            --bg-header: rgba(5, 5, 5, 0.9);
+            --bg-card: #0f0f0f;
+            --bg-hover: #1f1f1f;
             
             --border: #27272a;
             --border-strong: #3f3f46;
             
-            --text-main: #f4f4f5;
+            --text-main: #e4e4e7;
             --text-muted: #a1a1aa;
             --text-accent: #38bdf8;
-            
-            --scrollbar-thumb: #3f3f46;
+
+            /* Category Colors (Dark - Neon/Bright) */
+            --c-streaming: #913e3e; /* Cyan/Blue */
+            --c-single:    #4ade80; /* Bright Green */
+            --c-agg:       #a78bfa; /* Lavender */
+            --c-embed:     #fbbf24; /* Amber */
+
+            --scrollbar-thumb: #27272a;
             --shadow: none;
         }
 
@@ -58,18 +70,19 @@
 
         body {
             margin: 0;
-            font-family: 'Google Sans Flex', -apple-system, sans-serif;
+            font-family: 'Google Sans Flex', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-body);
+            /* Subtle Gradient for Dark Mode depth */
+            background-image: radial-gradient(circle at top right, rgba(30, 30, 30, 0.1), transparent 40%);
             color: var(--text-main);
             height: 100vh;
             overflow: hidden;
             display: flex;
-            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* --- SIDEBAR --- */
         #sidebar {
-            width: 280px;
+            width: 300px;
             height: 100%;
             background: var(--bg-sidebar);
             border-right: 1px solid var(--border);
@@ -77,25 +90,18 @@
             flex-direction: column;
             flex-shrink: 0;
             z-index: 50;
-            transition: transform 0.3s ease;
         }
 
         .brand {
             padding: 20px 24px;
-            font-size: 0.95rem;
-            font-weight: 700;
+            font-weight: 800;
+            font-size: 1rem;
             color: var(--text-main);
             border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            display: flex; align-items: center; gap: 12px;
             cursor: pointer;
         }
-
-        .brand-logo {
-            width: 28px; height: 28px;
-            object-fit: contain;
-        }
+        .brand-logo { width: 28px; height: 28px; object-fit: contain; }
 
         #nav-container {
             flex: 1;
@@ -103,15 +109,14 @@
             padding: 16px 12px;
         }
 
+        /* Nav Items */
         .nav-item {
             display: block;
-            padding: 8px 12px;
+            padding: 6px 12px;
             margin-bottom: 2px;
-            color: var(--text-muted);
             text-decoration: none;
             border-radius: 6px;
             font-size: 0.85rem;
-            font-weight: 500;
             transition: all 0.2s;
             border: 1px solid transparent;
         }
@@ -121,21 +126,45 @@
             color: var(--text-main);
         }
 
-        .nav-item.active {
-            background: var(--bg-hover);
-            color: var(--text-accent);
-            font-weight: 600;
-            border-color: var(--border);
+        /* Sidebar: Major Colored Headers */
+        .nav-item.major-header {
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 24px;      
+            margin-bottom: 8px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 0.8rem;
+        }
+        .nav-item.type-streaming { color: var(--c-streaming); }
+        .nav-item.type-single    { color: var(--c-single); }
+        .nav-item.type-agg       { color: var(--c-agg); }
+        .nav-item.type-embed     { color: var(--c-embed); }
+
+        /* Sidebar: Sub Headers (Movies, etc) */
+        .nav-item.sub-header {
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            margin-top: 12px;
         }
 
-        .nav-item.sub-item {
-            padding-left: 28px;
-            margin-left: 10px;
-            border-left: 1px solid var(--border);
+        /* Sidebar: Services (Small Items) */
+        .nav-item.service-item {
+            color: var(--text-muted);
+            font-weight: 500;
+            padding-left: 24px;
+            border-left: 2px solid transparent;
             border-radius: 0 6px 6px 0;
         }
+        .nav-item.service-item:hover { border-left-color: var(--border-strong); }
+        
+        /* Active State */
+        .nav-item.active { background: var(--bg-hover); font-weight: 700; color: var(--text-main); }
+        .nav-item.major-header.active { background: transparent; } 
 
-        /* --- MAIN WRAPPER --- */
+        /* --- MAIN AREA --- */
         #main-wrapper {
             flex: 1;
             display: flex;
@@ -148,17 +177,20 @@
             height: 60px;
             padding: 0 32px;
             background: var(--bg-header);
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
             z-index: 40;
         }
 
-        .header-controls { display: flex; align-items: center; gap: 10px; }
+        /* THE FIX: THIS CLASS WAS MISSING */
+        .header-controls { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
 
         .btn {
             background: transparent;
@@ -167,23 +199,13 @@
             padding: 6px 12px;
             border-radius: 6px;
             cursor: pointer;
-            font-family: inherit;
             font-size: 0.85rem;
-            font-weight: 500;
+            font-weight: 600;
             display: flex; align-items: center; gap: 8px;
-            transition: all 0.2s;
         }
         .btn:hover { background: var(--bg-hover); border-color: var(--border-strong); }
-        .btn:disabled { opacity: 0.5; cursor: wait; }
 
-        .status-text {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-right: 12px;
-            font-family: monospace;
-        }
-
-        /* --- MARKDOWN STYLING --- */
+        /* --- MARKDOWN CONTENT --- */
         #content-scroll {
             flex: 1;
             overflow-y: auto;
@@ -194,43 +216,46 @@
         .markdown-body {
             max-width: 900px;
             margin: 0 auto;
-            line-height: 1.65;
+            line-height: 1.6;
             color: var(--text-main);
         }
 
-        /* --- THE FIX: SCROLL MARGIN --- */
-        /* This ensures that when you click a link, the header (60px) 
-           doesn't cover the title. We add 80px buffer. */
-        .markdown-body h1, 
-        .markdown-body h2, 
-        .markdown-body h3 {
-            scroll-margin-top: 80px; 
-        }
-
-        /* Typography */
+        /* Base Typography */
+        .markdown-body h1, .markdown-body h2, .markdown-body h3 { scroll-margin-top: 80px; }
+        
         .markdown-body h1 {
-            font-size: 2rem;
+            font-size: 2.2rem;
+            font-weight: 800;
             padding-bottom: 16px;
             border-bottom: 1px solid var(--border);
+            color: var(--text-accent);
             margin-top: 0;
-            color: var(--text-main);
         }
         
-        .markdown-body h2 { 
-            margin-top: 2.5em; 
-            font-size: 1.5rem; 
-            letter-spacing: -0.01em; 
+        .markdown-body h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-top: 3rem;
             color: var(--text-main);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
         }
         
-        .markdown-body h3 { 
-            margin-top: 2em; 
-            font-size: 1.15rem; 
+        .markdown-body h3 {
+            font-size: 1.2rem;
             font-weight: 600;
-            color: var(--text-main);
+            margin-top: 2rem;
+            color: var(--text-accent);
         }
-        
-        .markdown-body a { color: var(--text-accent); text-decoration: none; font-weight: 500; }
+
+        /* --- DYNAMIC HEADER COLORS (Applied by JS) --- */
+        .markdown-body h1.header-streaming, .markdown-body h2.header-streaming { color: var(--c-streaming) !important; border-bottom-color: var(--c-streaming) !important; }
+        .markdown-body h1.header-single,    .markdown-body h2.header-single    { color: var(--c-single) !important;    border-bottom-color: var(--c-single) !important; }
+        .markdown-body h1.header-agg,       .markdown-body h2.header-agg       { color: var(--c-agg) !important;       border-bottom-color: var(--c-agg) !important; }
+        .markdown-body h1.header-embed,     .markdown-body h2.header-embed     { color: var(--c-embed) !important;     border-bottom-color: var(--c-embed) !important; }
+
+        /* Standard Elements */
+        .markdown-body a { color: var(--text-accent); text-decoration: none; font-weight: 600; }
         .markdown-body a:hover { text-decoration: underline; }
         .markdown-body img { max-width: 100%; border-radius: 8px; height: auto; display: block; margin: 20px 0; }
 
@@ -240,38 +265,30 @@
             border-collapse: separate;
             border-spacing: 0;
             margin: 24px 0;
-            font-size: 0.9rem;
             border: 1px solid var(--border);
             border-radius: 8px;
             overflow: hidden;
+            font-size: 0.9rem;
             background: var(--bg-card);
-            box-shadow: var(--shadow);
         }
-
         .markdown-body th {
             background: var(--bg-hover);
             text-align: left;
-            padding: 12px 16px;
-            font-weight: 600;
+            padding: 12px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border);
             color: var(--text-main);
-            border-bottom: 1px solid var(--border);
-            font-size: 0.8rem;
-            text-transform: uppercase;
         }
-
         .markdown-body td {
-            padding: 12px 16px;
+            padding: 12px;
             border-bottom: 1px solid var(--border);
-            color: var(--text-muted);
             vertical-align: top;
+            color: var(--text-muted);
         }
-
-        .markdown-body tr:last-child td { border-bottom: none; }
         .markdown-body tr:hover td { background-color: var(--bg-hover); color: var(--text-main); }
 
         /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
 
         /* Mobile */
@@ -281,8 +298,8 @@
             #sidebar {
                 position: fixed; left: 0; top: 0;
                 transform: translateX(-100%);
-                width: 80%;
-                box-shadow: 20px 0 50px rgba(0,0,0,0.3);
+                width: 85%;
+                box-shadow: 20px 0 50px rgba(0,0,0,0.5);
             }
             #sidebar.open { transform: translateX(0); }
             #content-scroll { padding: 20px; }
@@ -314,14 +331,11 @@
                     <span id="themeIcon">☀</span>
                 </button>
                  <a href="https://github.com/roigoatzzz/FMHY-Grading" target="_blank" class="btn" title="View Project on GitHub" style="text-decoration: none;">
-        <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
-        </svg>
-        GitHub
-         </a>
-    <button class="btn" id="refreshBtn" onclick="fetchData()">
-        Refresh
-    </button>
+                    GitHub
+                 </a>
+                <button class="btn" id="refreshBtn" onclick="fetchData()">
+                    Refresh
+                </button>
             </div>
         </header>
 
@@ -376,16 +390,15 @@
                 const timestamp = Date.now();
                 
                 try {
-                    console.log("Attempt 1: Direct Fetch");
                     response = await fetch(`${RAW_URL}?t=${timestamp}`);
                     if (!response.ok) throw new Error("Direct fetch failed");
                 } catch (e) {
                     try {
-                        console.warn("Attempt 2: Proxy A");
+                        console.log("Using Proxy A");
                         response = await fetch(`${PROXY_A}${encodeURIComponent(RAW_URL)}&t=${timestamp}`);
                         if (!response.ok) throw new Error("Proxy A failed");
                     } catch (e2) {
-                        console.warn("Attempt 3: Proxy B");
+                        console.log("Using Proxy B");
                         response = await fetch(`${PROXY_B}${encodeURIComponent(RAW_URL)}?t=${timestamp}`);
                     }
                 }
@@ -407,12 +420,12 @@
 
             } catch (err) {
                 console.error(err);
-                statusDiv.textContent = "Error";
+                statusDiv.textContent = "Error Loading";
                 statusDiv.style.color = "#ef4444";
-                contentDiv.innerHTML = `<div style="padding:40px; border:1px solid var(--border); border-radius:8px;">
+                contentDiv.innerHTML = `<div style="padding:40px; border:1px solid var(--border); border-radius:8px; text-align:center;">
                     <h3>Unable to load content</h3>
-                    <p>Connection failed. Check network.</p>
-                    <button class="btn" onclick="fetchData()">Try Again</button>
+                    <p>There was a network issue connecting to GitHub.</p>
+                    <button class="btn" onclick="fetchData()" style="margin:0 auto;">Try Again</button>
                 </div>`;
             } finally {
                 refreshBtn.disabled = false;
@@ -421,7 +434,7 @@
             }
         }
 
-        // SIDEBAR
+        // SIDEBAR & CONTENT COLORING
         function generateSidebar() {
             navContainer.innerHTML = '';
             const headers = contentDiv.querySelectorAll('h1, h2, h3');
@@ -435,16 +448,38 @@
                     const img = header.querySelector('img');
                     if (img && img.alt) title = img.alt; 
                     else if (header.tagName === 'H1') title = "Overview"; 
-                    else title = `Section ${index + 1}`;
+                    else title = "Section";
                 }
 
                 const link = document.createElement('a');
                 link.textContent = title;
                 link.href = `#${sectionId}`;
-                link.className = 'nav-item';
                 link.dataset.target = sectionId;
-                
-                if (header.tagName === 'H3') link.classList.add('sub-item');
+                link.className = 'nav-item'; 
+
+                // LOGIC: Apply classes to Link AND Content Header
+                if (title.includes("Streaming Sites")) {
+                    link.classList.add('major-header', 'type-streaming');
+                    header.classList.add('header-streaming'); 
+                } 
+                else if (title.includes("Single Server")) {
+                    link.classList.add('major-header', 'type-single');
+                    header.classList.add('header-single');
+                }
+                else if (title.includes("Stream Aggregators")) {
+                    link.classList.add('major-header', 'type-agg');
+                    header.classList.add('header-agg');
+                }
+                else if (title.includes("Embed Frontends")) {
+                    link.classList.add('major-header', 'type-embed');
+                    header.classList.add('header-embed');
+                }
+                else if (header.tagName === 'H1' || header.tagName === 'H2') {
+                    link.classList.add('sub-header');
+                }
+                else if (header.tagName === 'H3') {
+                    link.classList.add('service-item');
+                }
 
                 link.onclick = (e) => {
                     e.preventDefault();
@@ -465,8 +500,9 @@
                         const activeLink = document.querySelector(`.nav-item[data-target="${entry.target.id}"]`);
                         if (activeLink) {
                             activeLink.classList.add('active');
-                            // Gently scroll nav
-                            activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            if(!activeLink.classList.contains('major-header')) {
+                                activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
                         }
                     }
                 });
