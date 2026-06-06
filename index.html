@@ -161,6 +161,21 @@
         .nav-item.service-item:hover { border-left-color: var(--border-strong); }
         
         /* Active State */
+        /* --- SEARCH --- */
+        .search-wrapper { padding: 12px; border-bottom: 1px solid var(--border); }
+        #sidebar-search {
+            width: 100%;
+            padding: 8px 12px;
+            background: var(--bg-body);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        #sidebar-search:focus { border-color: var(--text-accent); }
+
         .nav-item.active { background: var(--bg-hover); font-weight: 700; color: var(--text-main); }
         .nav-item.major-header.active { background: transparent; } 
 
@@ -254,6 +269,16 @@
         .markdown-body h1.header-agg,       .markdown-body h2.header-agg       { color: var(--c-agg) !important;       border-bottom-color: var(--c-agg) !important; }
         .markdown-body h1.header-embed,     .markdown-body h2.header-embed     { color: var(--c-embed) !important;     border-bottom-color: var(--c-embed) !important; }
 
+        /* Grade Badges */
+        .grade-badge {
+            display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: 800; font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+        .grade-a { background: #22c55e20; color: #22c55e; border: 1px solid #22c55e40; }
+        .grade-b { background: #3b82f620; color: #3b82f6; border: 1px solid #3b82f640; }
+        .grade-c { background: #eab30820; color: #eab308; border: 1px solid #eab30840; }
+        .grade-f { background: #ef444420; color: #ef4444; border: 1px solid #ef444440; }
+
         /* Standard Elements */
         .markdown-body a { color: var(--text-accent); text-decoration: none; font-weight: 600; }
         .markdown-body a:hover { text-decoration: underline; }
@@ -285,6 +310,11 @@
             vertical-align: top;
             color: var(--text-muted);
         }
+        .markdown-body thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
         .markdown-body tr:hover td { background-color: var(--bg-hover); color: var(--text-main); }
 
         /* Scrollbar */
@@ -315,6 +345,9 @@
     <div class="brand" onclick="document.getElementById('content-scroll').scrollTo({top:0, behavior:'smooth'})" title="Scroll to Top">
         <img src="https://raw.githubusercontent.com/roigoatzzz/FMHY-Grading/main/fmhy.png" alt="FMHY" class="brand-logo">
         FMHY Grading
+    </div>
+    <div class="search-wrapper">
+        <input type="text" id="sidebar-search" placeholder="Search sections or sites..." oninput="filterSidebar()">
     </div>
     <div id="nav-container"></div>
 </nav>
@@ -411,6 +444,7 @@
                 // PROCESS
                 cleanUpTableOfContents(); 
                 generateSidebar();       
+                processGrades();
                 fixLinks();
                 initScrollSpy();
 
@@ -432,6 +466,18 @@
                 refreshBtn.textContent = "Refresh";
                 contentDiv.style.opacity = '1';
             }
+        }
+
+        function processGrades() {
+            const cells = contentDiv.querySelectorAll('td');
+            cells.forEach(td => {
+                const text = td.textContent.trim().toUpperCase();
+                // Matches A, A+, B, C, F etc
+                if (/^[A-F][+-]?$/.test(text)) {
+                    const gradeClass = text[0].toLowerCase();
+                    td.innerHTML = `<span class="grade-badge grade-${gradeClass}">${text}</span>`;
+                }
+            });
         }
 
         // SIDEBAR & CONTENT COLORING
@@ -458,11 +504,11 @@
                 link.className = 'nav-item'; 
 
                 // --- CLASSIFICATION LOGIC ---
-                if (title.includes("Streaming Sites")) {
+                if (title.includes("Streaming Sites") || title.includes("Multi-Server")) {
                     link.classList.add('major-header', 'type-streaming');
                     header.classList.add('header-streaming'); 
                 } 
-                else if (title.includes("Single Server")) {
+                else if (title.includes("Single Server") || title.includes("Dedicated-Server")) {
                     link.classList.add('major-header', 'type-single');
                     header.classList.add('header-single');
                 }
@@ -507,6 +553,19 @@
                 navContainer.appendChild(link);
             });
         }
+
+        function filterSidebar() {
+            const query = document.getElementById('sidebar-search').value.toLowerCase();
+            const items = navContainer.querySelectorAll('.nav-item');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                const isMatch = text.includes(query);
+                item.style.display = isMatch ? 'block' : 'none';
+                // Always show major headers if we are searching within them? 
+                // Optional: if (item.classList.contains('major-header')) item.style.display = 'block';
+            });
+        }
+
         // SCROLL SPY
         function initScrollSpy() {
             const observer = new IntersectionObserver((entries) => {
